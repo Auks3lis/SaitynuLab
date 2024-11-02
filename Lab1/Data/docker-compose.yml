@@ -1,0 +1,7 @@
+services:
+  postgres:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=postfrespw
+    ports:
+      - 5432:5342

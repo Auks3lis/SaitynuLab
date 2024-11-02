@@ -1,0 +1,404 @@
+openapi: 3.0.1
+info:
+  title: Meal API
+  version: 1.0.0
+  description: API for managing meals, recipes, and comments.
+
+servers:
+  - url: http://localhost:5000/api
+
+paths:
+  /meals:
+    get:
+      summary: Get all meals
+      tags:
+        - meal
+      responses:
+        '200':
+          description: A list of meals
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MealDto'
+              example: :
+                - id: 5
+                  name: "Sriubos"
+                  description: "Cia visi sriubu receptai"
+                  creationDate: "2024-10-03T13:30:17.36649Z"
+                - id: 7
+                  name: "Desertai"
+                  description: "Cia visi desertu receptai"
+                  creationDate: "2024-10-03T13:31:43.628932Z"
+    post:
+      summary: Create a new meal
+      tags:
+        - meal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMealDto'
+      responses:
+        '201':
+          $ref: '#/components/schemas/MealDto'
+        '400':
+          description: Bad request
+        '422':
+          description: Unprocessable Entity (validation error)
+  
+  /meals/{mealId}:
+    parameters:
+      - $ref: '#/components/parameters/mealId'
+    get:
+      summary: Get a meal by ID
+      tags:
+        - meal
+      responses:
+        '200':
+          description: A specific meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealDto'
+        '404':
+          description: Meal not found
+    put:
+      summary: Update a meal by ID
+      tags:
+        - meal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMealDto'
+      responses:
+        '200':
+          description: Updated meal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealDto'
+        '422':
+          description: Unprocessable Entity (validation error)
+        '400':
+          description: Bad request
+        '404':
+          description: Meal not found
+    delete:
+      summary: Delete a meal by ID
+      tags:
+        - meal
+      responses:
+        '204':
+          description: Meal deleted
+        '404':
+          description: Meal not found
+
+
+
+  /meals/{mealId}/recipies:
+    parameters:
+      - $ref: '#/components/parameters/mealId'
+    get:
+      summary: Get all recipes for a meal
+      tags:
+        - recipie
+      responses:
+        '200':
+          description: A list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipieDto'
+        '404':
+          description: Meal not found
+    post:
+      summary: Create a new recipe for a meal
+      tags:
+        - recipie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipieDto'
+      responses:
+        '201':
+          description: Recipe created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipieDto'
+        '400':
+          description: Bad request
+        '422':
+          description: Unprocessable Entity (validation error)
+
+  /meals/{mealId}/recipies/{recipieId}:
+    parameters:
+      - $ref: '#/components/parameters/mealId'
+      - $ref: '#/components/parameters/recipieId'
+    get:
+      summary: Get a recipe by ID
+      tags:
+        - recipie
+      responses:
+        '200':
+          description: A recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipieDto'
+        '404':
+          description: Recipe not found
+    put:
+      summary: Update a recipe by ID
+      tags:
+        - recipie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecipieDto'
+      responses:
+        '200':
+          description: Updated recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipieDto'
+        '422':
+          description: Unprocessable Entity (validation error)
+        '400':
+          description: Bad request
+        '404':
+          description: Recipe not found
+    delete:
+      summary: Delete a recipe by ID
+      tags:
+        - recipie
+      responses:
+        '204':
+          description: Recipe deleted
+        '404':
+          description: Recipe not found
+
+
+
+
+  /meals/{mealId}/recipies/{recipieId}/comments:
+    parameters:
+      - $ref: '#/components/parameters/mealId'
+      - $ref: '#/components/parameters/recipieId'
+    get:
+      summary: Get all comments for a recipe
+      tags:
+        - comment
+      responses:
+        '200':
+          description: A list of comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '404':
+          description: Recipe not found
+    post:
+      summary: Create a new comment for a recipe
+      tags:
+        - comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentDto'
+      responses:
+        '201':
+          description: Comment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: Bad request
+        '422':
+          description: Unprocessable Entity (validation error)
+
+  /meals/{mealId}/recipies/{recipieId}/comments/{commentId}:
+    parameters:
+      - $ref: '#/components/parameters/mealId'
+      - $ref: '#/components/parameters/recipieId'
+      - $ref: '#/components/parameters/commentId'
+    get:
+      summary: Get a comment by ID
+      tags:
+        - comment
+      responses:
+        '200':
+          description: A comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '404':
+          description: Comment not found
+    put:
+      summary: Update a comment by ID
+      tags:
+        - comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCommentDto'
+      responses:
+        '200':
+          description: Updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '422':
+          description: Unprocessable Entity (validation error)
+        '400':
+          description: Bad request
+        '404':
+          description: Comment not found
+    delete:
+      summary: Delete a comment by ID
+      tags:
+        - comment
+      responses:
+        '204':
+          description: Comment deleted
+        '404':
+          description: Comment not found
+
+
+
+
+components:
+  schemas:
+    MealDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        creationDate:
+          type: string
+          format: date-time
+    CreateMealDto:
+      type: object
+      properties:
+        name:
+          minLength: 1
+          maxLength: 20
+          type: string
+        description:
+          minLength: 1
+          maxLength: 100
+          type: string
+    UpdateMealDto:
+      type: object
+      properties:
+        description:
+          minLength: 1
+          maxLength: 100
+          type: string
+    
+    RecipieDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        mealId:
+          type: integer
+        description:
+          type: string
+        creationDate:
+          type: string
+          format: date-time
+    CreateRecipieDto:
+      type: object
+      properties:
+        name:
+          minLength: 1
+          maxLength: 20
+          type: string
+        description:
+          minLength: 1
+          maxLength: 100
+          type: string
+    UpdateRecipieDto:
+      type: object
+      properties:
+        description:
+          minLength: 1
+          maxLength: 100
+          type: string
+    
+    CommentDto:
+      type: object
+      properties:
+        id:
+          type: integer
+        content:
+          type: string
+        creationDate:
+          type: string
+          format: date-time
+    CreateCommentDto:
+      type: object
+      properties:
+        content:
+          minLength: 1
+          maxLength: 200
+          type: string
+    UpdateCommentDto:
+      type: object
+      properties:
+        content:
+          minLength: 1
+          maxLength: 200
+          type: string
+  parameters:
+    mealId:
+      name: mealId
+      in: path
+      required: true
+      schema:
+        type: integer
+    recipieId:
+      name: recipieId
+      in: path
+      required: true
+      schema:
+        type: integer
+    commentId:
+      name: commentId
+      in: path
+      required: true
+      schema:
+        type: integer
+tags:
+  - name: meal
+    description: Operations related to meals
+  - name: recipie
+    description: Operations related to recipies
+  - name: comment
+    description: Operations related to comments
